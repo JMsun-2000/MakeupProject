@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[PloygonUIView setPolygonPoints:]:PloygonUIView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[BasicImageManager getScaledImage]:BasicImageManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.m_originalImage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[BasicImageManager detectorFacefromPhoto:]:BasicImageManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[FacialOrgansViewController viewDidLoad]:FacialOrgansViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[FaceDataManager getLeftEye:ScaleType:]:FaceDataManager.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[original CGImage]">
+            </PersistentString>
+            <PersistentString
+               value = "CGRectMake(leftBond*scalefactor, topPos*scalefactor, width*scalefactor, height*scalefactor)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MarkupFaceView drawRect:]:MarkupFaceView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[PloygonUIView drawRect:]:PloygonUIView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.curPolygonPoints count">
+            </PersistentString>
+            <PersistentString
+               value = "[FaceDataManager getInstance] getLeftEyePoints">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[FaceDataManager getLeftEyePoints]:FaceDataManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[MarkupFaceView initWithCoder:]:MarkupFaceView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[PartFaceViewController viewDidLoad]:PartFaceViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view.bounds">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
