@@ -64,9 +64,9 @@
     // draw left eye
     path = CGPathCreateMutable();
     CGPoint leftEyePos = self.basicImageMana.leftEyePosition;
-    CGRect leftEyeArea = CGRectMake(leftEyePos.x - faceArea.size.width * 0.1f,
-                                    leftEyePos.y - faceArea.size.width * 0.1f,
-                                    faceArea.size.width * 0.2f, faceArea.size.width * 0.2f);
+    CGRect leftEyeArea = CGRectMake(leftEyePos.x - faceArea.size.width * 0.01f,
+                                    leftEyePos.y - faceArea.size.width * 0.01f,
+                                    faceArea.size.width * 0.02f, faceArea.size.width * 0.02f);
     CGPathAddRect(path, NULL, leftEyeArea);
     [[UIColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:0.3] setFill];
     CGContextAddPath(currentContext, path);

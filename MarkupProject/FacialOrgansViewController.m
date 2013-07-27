@@ -11,6 +11,11 @@
 #import "PloygonUIView.h"
 #import "MarkupDotUIView.h"
 
+CGFloat const DEFAULT_LEFTEYE_SHADOW_WIDTH = 249.57563983f;
+CGFloat const DEFAULT_LEFTEYE_SHADOW_HEIGHT = 100.00000f;
+CGFloat const LEFTEYE_REFERENCE_POINT_X = 412.0f;
+CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
+
 @interface FacialOrgansViewController ()
 @property (nonatomic) PloygonUIView* polygonView;
 @property (nonatomic) NSMutableArray* pointsViewArray;
@@ -93,6 +98,7 @@
     }
     
     UIImage *leftEye = [[FaceDataManager getInstance] getLeftEye:self.view.frame ScaleType:0];
+    CGRect canvesRect = CGRectMake(0.0f, 0.0f, leftEye.size.width, leftEye.size.height);
     
     // Add Color by draw context
     UIGraphicsBeginImageContext(leftEye.size);
@@ -103,10 +109,9 @@
     
     // Overlay red color
     CGContextSetBlendMode(oldContext, kCGBlendModeOverlay);
-    CGRect rect = CGRectMake(0.0f, 0.0f, leftEye.size.width, leftEye.size.height);
     // draw red
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathAddRect(path, NULL, rect);
+    CGPathAddRect(path, NULL, canvesRect);
     [[UIColor colorWithRed:1.00f green:0.00f blue:0.00f alpha:1.0f] setFill];
     CGContextAddPath(oldContext, path);
     CGContextDrawPath(oldContext, kCGPathFill);
@@ -121,7 +126,38 @@
     //return source;
     
     // Add alpha mask
-    UIImage *maskImage = [UIImage imageNamed:@"eyeshadow-test-samples-R.jpg"];
+    UIImage *maskOriginal = [UIImage imageNamed:@"eyeshadow-test-samples-L.jpg"];
+    // Scale and rotation mask
+    CGFloat curXDist = pointsPos[2].x - pointsPos[0].x;
+    CGFloat curYDist = pointsPos[2].y - pointsPos[0].y;
+    CGFloat curEyeDistance = sqrt((curXDist*curXDist)+(curYDist*curYDist));
+    curXDist = pointsPos[3].x - pointsPos[1].x;
+    curYDist = pointsPos[3].y - pointsPos[1].y;
+    CGFloat curEyeHeight = sqrt((curXDist*curXDist)+(curYDist*curYDist));
+    CGFloat xScaleFactor = curEyeDistance/DEFAULT_LEFTEYE_SHADOW_WIDTH;
+    CGFloat yScaleFactor = curEyeHeight/DEFAULT_LEFTEYE_SHADOW_HEIGHT;
+    CGFloat realWidth = maskOriginal.size.width * xScaleFactor;
+    CGFloat realHeigth = maskOriginal.size.height * yScaleFactor;
+    CGFloat xOffset = LEFTEYE_REFERENCE_POINT_X * xScaleFactor;
+    CGFloat yOffset = LEFTEYE_REFERENCE_POINT_Y * yScaleFactor;
+    xOffset = pointsPos[2].x-xOffset;
+    yOffset = pointsPos[2].y-yOffset;
+    
+    UIGraphicsBeginImageContext(leftEye.size);
+    oldContext = UIGraphicsGetCurrentContext();
+    // save context
+    CGContextSaveGState(oldContext);
+    [[UIColor colorWithWhite:1.0f alpha:1.0f] setFill];
+    UIRectFill(canvesRect);
+    [maskOriginal drawInRect:CGRectMake(xOffset, yOffset, realWidth, realHeigth)];
+    // recovery environment and save new Image
+    CGContextRestoreGState(oldContext);
+    UIImage *maskImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // test for step2
+    //return maskImage;
+    
     CGImageRef maskRef = maskImage.CGImage;
     CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskRef),
                                         CGImageGetHeight(maskRef),
