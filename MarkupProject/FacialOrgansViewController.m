@@ -70,6 +70,125 @@
         [self.pointsViewArray addObject:point];
         [[self view] addSubview:point];
     }
+    
+    // Add mask button
+    self.maskLeftEyeButton = [[UIBarButtonItem alloc] initWithTitle:@"MaskLeftEye" style:UIBarButtonItemStylePlain target:self action:@selector(doMaskLeftEye)];
+    // Add all button to bar
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.maskLeftEyeButton,nil];
+
+}
+
+-(void)doMaskLeftEye
+{
+    UIImage *maskedImage = [self getLeftEyeMask];
+    [[self view] addSubview:[[UIImageView alloc] initWithImage:maskedImage]];
+}
+
+-(UIImage*)getLeftEyeMask
+{
+    CGPoint pointsPos[4];
+    // get 4 points
+    for (int i = 0; i < self.pointsViewArray.count; i++){
+        pointsPos[i] = [[self.pointsViewArray objectAtIndex:i] center];
+    }
+    
+    UIImage *leftEye = [[FaceDataManager getInstance] getLeftEye:self.view.frame ScaleType:0];
+    
+    // Add Color by draw context
+    UIGraphicsBeginImageContext(leftEye.size);
+    CGContextRef oldContext = UIGraphicsGetCurrentContext();
+    [leftEye drawAtPoint:CGPointZero];
+    // save context
+    CGContextSaveGState(oldContext);
+    
+    // Overlay red color
+    CGContextSetBlendMode(oldContext, kCGBlendModeOverlay);
+    CGRect rect = CGRectMake(0.0f, 0.0f, leftEye.size.width, leftEye.size.height);
+    // draw red
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, rect);
+    [[UIColor colorWithRed:1.00f green:0.00f blue:0.00f alpha:1.0f] setFill];
+    CGContextAddPath(oldContext, path);
+    CGContextDrawPath(oldContext, kCGPathFill);
+    CGPathRelease(path);
+    
+    // recovery environment and save new Image
+    CGContextRestoreGState(oldContext);
+    UIImage *source = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // test for step1
+    //return source;
+    
+    // Add alpha mask
+    UIImage *maskImage = [UIImage imageNamed:@"eyeshadow-test-samples-R.jpg"];
+    CGImageRef maskRef = maskImage.CGImage;
+    CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskRef),
+                                        CGImageGetHeight(maskRef),
+                                        CGImageGetBitsPerComponent(maskRef),
+                                        CGImageGetBitsPerPixel(maskRef),
+                                        CGImageGetBytesPerRow(maskRef),
+                                        CGImageGetDataProvider(maskRef), NULL, false);
+    
+    CGImageRef sourceImage = [source CGImage];
+    CGImageRef imageWithAlpha = sourceImage;
+    if ((CGImageGetAlphaInfo(sourceImage) == kCGImageAlphaNone)
+        || (CGImageGetAlphaInfo(sourceImage) == kCGImageAlphaNoneSkipFirst)
+        || (CGImageGetAlphaInfo(sourceImage) == kCGImageAlphaNoneSkipLast)){
+        imageWithAlpha = CopyImageAndAddAlphaChannel(sourceImage);
+    }
+    
+    CGImageRef masked = CGImageCreateWithMask(imageWithAlpha, mask);
+    CGImageRelease(mask);
+    
+    if (sourceImage != imageWithAlpha) {
+        CGImageRelease(imageWithAlpha);
+    }
+    
+    /* EDIT STARTS HERE return retImage; */
+    
+    //Added extra render step to force it to save correct alpha values (not the mask)
+    UIImage* retImage = [UIImage imageWithCGImage:masked];
+    CGImageRelease(masked);
+    
+    UIGraphicsBeginImageContext(retImage.size);
+    [retImage drawAtPoint:CGPointZero];
+    UIImage *newImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    retImage = nil;
+    
+    return newImg;
+}
+
+CGImageRef CopyImageAndAddAlphaChannel(CGImageRef sourceImage) {
+    
+    CGImageRef retVal = NULL;
+    
+    size_t width = CGImageGetWidth(sourceImage);
+    
+    size_t height = CGImageGetHeight(sourceImage);
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    CGContextRef offscreenContext = CGBitmapContextCreate(NULL, width, height,
+                                                          
+                                                          8, 0, colorSpace,   kCGImageAlphaPremultipliedLast );
+    
+    
+    if (offscreenContext != NULL) {
+        
+        CGContextDrawImage(offscreenContext, CGRectMake(0, 0, width, height), sourceImage);
+        
+        retVal = CGBitmapContextCreateImage(offscreenContext);
+        
+        CGContextRelease(offscreenContext);
+        
+    }
+    
+    CGColorSpaceRelease(colorSpace);
+    
+    return retVal;
+    
 }
 
 -(void)reDrawPolygon

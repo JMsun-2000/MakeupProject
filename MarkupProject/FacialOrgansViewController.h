@@ -10,4 +10,6 @@
 
 @interface FacialOrgansViewController : UIViewController
 -(void)reDrawPolygon;
+@property (strong, nonatomic) UIBarButtonItem *maskLeftEyeButton;
+@property (strong, nonatomic) UIBarButtonItem *maskRightEyeButton;
 @end
