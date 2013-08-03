@@ -126,7 +126,7 @@ CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
     //return source;
     
     // Add alpha mask
-    UIImage *maskOriginal = [UIImage imageNamed:@"eyeshadow-test-samples-L.jpg"];
+    UIImage *maskOriginal = [UIImage imageNamed:@"eyeshadow-test-left.jpg"];
     // Scale and rotation mask
     CGFloat curXDist = pointsPos[2].x - pointsPos[0].x;
     CGFloat curYDist = pointsPos[2].y - pointsPos[0].y;

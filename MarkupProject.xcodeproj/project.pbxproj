@@ -13,6 +13,7 @@
 		7BC4F33C17A1173F00C79657 /* markupdemo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4F33B17A1173F00C79657 /* markupdemo.jpg */; };
 		7BC4F34017A3A6B100C79657 /* eyeshadow-test-samples-R.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4F33F17A3A6B100C79657 /* eyeshadow-test-samples-R.jpg */; };
 		7BC4F34217A3A70C00C79657 /* eyeshadow-test-samples-L.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4F34117A3A70C00C79657 /* eyeshadow-test-samples-L.jpg */; };
+		7BC4F34417A678BE00C79657 /* eyeshadow-test-left.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4F34317A678BE00C79657 /* eyeshadow-test-left.jpg */; };
 		7BF0F84A175F40080016416D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BF0F849175F40080016416D /* UIKit.framework */; };
 		7BF0F84C175F40080016416D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BF0F84B175F40080016416D /* Foundation.framework */; };
 		7BF0F84E175F40080016416D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BF0F84D175F40080016416D /* CoreGraphics.framework */; };
@@ -59,6 +60,7 @@
 		7BC4F33B17A1173F00C79657 /* markupdemo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = markupdemo.jpg; path = resource/markupdemo.jpg; sourceTree = "<group>"; };
 		7BC4F33F17A3A6B100C79657 /* eyeshadow-test-samples-R.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "eyeshadow-test-samples-R.jpg"; path = "resource/eyeshadow-test-samples-R.jpg"; sourceTree = "<group>"; };
 		7BC4F34117A3A70C00C79657 /* eyeshadow-test-samples-L.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "eyeshadow-test-samples-L.jpg"; path = "resource/eyeshadow-test-samples-L.jpg"; sourceTree = "<group>"; };
+		7BC4F34317A678BE00C79657 /* eyeshadow-test-left.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "eyeshadow-test-left.jpg"; path = "resource/eyeshadow-test-left.jpg"; sourceTree = "<group>"; };
 		7BF0F846175F40080016416D /* MarkupProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarkupProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BF0F849175F40080016416D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7BF0F84B175F40080016416D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -173,6 +175,7 @@
 		7BC4F336179A49B300C79657 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7BC4F34317A678BE00C79657 /* eyeshadow-test-left.jpg */,
 				7BC4F34117A3A70C00C79657 /* eyeshadow-test-samples-L.jpg */,
 				7BC4F33F17A3A6B100C79657 /* eyeshadow-test-samples-R.jpg */,
 				7BC4F33917A1172A00C79657 /* point.png */,
@@ -341,6 +344,7 @@
 				7BC4F33C17A1173F00C79657 /* markupdemo.jpg in Resources */,
 				7BC4F34017A3A6B100C79657 /* eyeshadow-test-samples-R.jpg in Resources */,
 				7BC4F34217A3A70C00C79657 /* eyeshadow-test-samples-L.jpg in Resources */,
+				7BC4F34417A678BE00C79657 /* eyeshadow-test-left.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
