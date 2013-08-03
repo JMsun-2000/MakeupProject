@@ -18,7 +18,12 @@ CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
 
 @interface FacialOrgansViewController ()
 @property (nonatomic) PloygonUIView* polygonView;
+@property (nonatomic) UIImageView* maskView;
 @property (nonatomic) NSMutableArray* pointsViewArray;
+@property (nonatomic) UIBezierPath* curOrganShapePath;
+@property (nonatomic) BOOL isMakeUp;
+@property (nonatomic) UISlider* alphaSlider;
+@property (nonatomic) UIImageView* colorMapImageView;
 @end
 
 @implementation FacialOrgansViewController
@@ -44,16 +49,26 @@ CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
 - (void)dealloc
 {
     [_polygonView dealloc];
+    [_maskView dealloc];
+    [_alphaSlider dealloc];
     for (int i; i < self.pointsViewArray.count; i++){
         [[self.pointsViewArray objectAtIndex:i] release];
     }
     [_pointsViewArray release];
+    
+    if (self.curOrganShapePath != nil){
+        [self.curOrganShapePath release];
+    }
+    
     [super dealloc];
 }
 
 - (void)viewDidLoad
 {
-
+    self.isMakeUp = false;
+    
+    // set background color
+    self.view.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view from its nib.
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[[FaceDataManager getInstance] getLeftEye:self.view.frame ScaleType:0]];
     [[self view] addSubview:imageView];
@@ -65,6 +80,8 @@ CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
     self.polygonView = [[PloygonUIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.polygonView setPolygonPoints:points];
     [[self view] addSubview:self.polygonView];
+    self.maskView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [[self view] addSubview:self.maskView];
     
     self.pointsViewArray = [[NSMutableArray alloc] init];
     // show control point
@@ -81,12 +98,41 @@ CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
     // Add all button to bar
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.maskLeftEyeButton,nil];
 
+    // add alpha slider bar
+    self.alphaSlider = [[UISlider alloc] initWithFrame:CGRectMake(10.0, [[UIScreen mainScreen] bounds].size.height - 300, 200, 20)];
+    self.alphaSlider.minimumValue = 0.0f;
+    self.alphaSlider.maximumValue = 1.0f;
+    self.alphaSlider.value = 1.0f;
+    self.alphaSlider.continuous = YES;
+    [self.alphaSlider addTarget:self action:@selector(maskAlphaChange) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.alphaSlider];
+    
+    self.colorMapImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"colorpallette.png"]];
+    self.colorMapImageView.center = CGPointMake(450, [[UIScreen mainScreen] bounds].size.height - 250);
+
+    [self.view addSubview:self.colorMapImageView];
+}
+
+-(void)maskAlphaChange
+{
+    float alpha = self.alphaSlider.value;
+    self.maskView.alpha = alpha;
 }
 
 -(void)doMaskLeftEye
 {
+    // Get bezier path
+    self.curOrganShapePath = [[self.polygonView getCurPath] retain];
+    // update mask
+    [self updateMaskLeftEye];
+    // remove the polygon
+    [self.polygonView removeFromSuperview];
+    self.isMakeUp = true;
+}
+
+-(void)updateMaskLeftEye{
     UIImage *maskedImage = [self getLeftEyeMask];
-    [[self view] addSubview:[[UIImageView alloc] initWithImage:maskedImage]];
+    self.maskView.backgroundColor = [UIColor colorWithPatternImage:maskedImage];
 }
 
 -(UIImage*)getLeftEyeMask
@@ -150,6 +196,9 @@ CGFloat const LEFTEYE_REFERENCE_POINT_Y = 208.0f;
     [[UIColor colorWithWhite:1.0f alpha:1.0f] setFill];
     UIRectFill(canvesRect);
     [maskOriginal drawInRect:CGRectMake(xOffset, yOffset, realWidth, realHeigth)];
+    // move the polygon of eye
+    [self.curOrganShapePath fill];
+    
     // recovery environment and save new Image
     CGContextRestoreGState(oldContext);
     UIImage *maskImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -227,15 +276,22 @@ CGImageRef CopyImageAndAddAlphaChannel(CGImageRef sourceImage) {
 
 -(void)reDrawPolygon
 {
-    NSMutableArray* points = [[NSMutableArray alloc] init];
-    for (int i = 0; i < self.pointsViewArray.count; i++){
-        MarkupDotUIView* dot = [self.pointsViewArray objectAtIndex:i];
-        CGRect pinFrame = dot.frame;
-        CGPoint point = CGPointMake(CGRectGetMidX(pinFrame),CGRectGetMidY(pinFrame));
-        [points addObject:[NSValue valueWithCGPoint:point]];
+    // check if make up done
+    if (self.isMakeUp){
+        // adjust the mask
+        [self updateMaskLeftEye];
     }
-    [self.polygonView setPolygonPoints:points];
-    [self.polygonView setNeedsDisplay];
+    else{
+        NSMutableArray* points = [[NSMutableArray alloc] init];
+        for (int i = 0; i < self.pointsViewArray.count; i++){
+            MarkupDotUIView* dot = [self.pointsViewArray objectAtIndex:i];
+            CGRect pinFrame = dot.frame;
+            CGPoint point = CGPointMake(CGRectGetMidX(pinFrame),CGRectGetMidY(pinFrame));
+            [points addObject:[NSValue valueWithCGPoint:point]];
+        }
+        [self.polygonView setPolygonPoints:points];
+        [self.polygonView setNeedsDisplay];
+    }
 }
 
 - (void)didReceiveMemoryWarning

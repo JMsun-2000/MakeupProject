@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7BC420B417ACFCD800C79657 /* colorpallette.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC420B317ACFCD800C79657 /* colorpallette.png */; };
 		7BC4F32E17955AB000C79657 /* MarkupDotUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC4F32D17955AB000C79657 /* MarkupDotUIView.m */; };
 		7BC4F331179A471F00C79657 /* FacialOrgansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BC4F330179A471F00C79657 /* FacialOrgansViewController.m */; };
 		7BC4F33A17A1172A00C79657 /* point.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BC4F33917A1172A00C79657 /* point.png */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7BC420B317ACFCD800C79657 /* colorpallette.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = colorpallette.png; path = resource/colorpallette.png; sourceTree = "<group>"; };
 		7BC4F32C17955AB000C79657 /* MarkupDotUIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarkupDotUIView.h; sourceTree = "<group>"; };
 		7BC4F32D17955AB000C79657 /* MarkupDotUIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarkupDotUIView.m; sourceTree = "<group>"; };
 		7BC4F32F179A471E00C79657 /* FacialOrgansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacialOrgansViewController.h; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 		7BC4F336179A49B300C79657 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7BC420B317ACFCD800C79657 /* colorpallette.png */,
 				7BC4F34317A678BE00C79657 /* eyeshadow-test-left.jpg */,
 				7BC4F34117A3A70C00C79657 /* eyeshadow-test-samples-L.jpg */,
 				7BC4F33F17A3A6B100C79657 /* eyeshadow-test-samples-R.jpg */,
@@ -345,6 +348,7 @@
 				7BC4F34017A3A6B100C79657 /* eyeshadow-test-samples-R.jpg in Resources */,
 				7BC4F34217A3A70C00C79657 /* eyeshadow-test-samples-L.jpg in Resources */,
 				7BC4F34417A678BE00C79657 /* eyeshadow-test-left.jpg in Resources */,
+				7BC420B417ACFCD800C79657 /* colorpallette.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,6 +10,7 @@
 
 @interface PloygonUIView()
 @property (nonatomic) NSArray* curPolygonPoints;
+@property (nonatomic) UIBezierPath* curBezierPath;
 @end
 
 CGFloat BEZIER_FACTOR1 = 0.25f;
@@ -36,11 +37,21 @@ CGFloat BEZIER_FACTOR2 = 0.3f;
     _curPolygonPoints = [points retain];
 }
 
+-(UIBezierPath*)getCurPath
+{
+    return self.curBezierPath;
+}
+
+
 -(void)dealloc
 {
     if (_curPolygonPoints != nil){
         // release the old one
         [_curPolygonPoints release];
+    }
+    
+    if (_curBezierPath  != nil){
+        [self.curBezierPath release];
     }
     [super dealloc];
 }
@@ -54,14 +65,19 @@ CGFloat BEZIER_FACTOR2 = 0.3f;
     UIColor *stellBlueColor = [UIColor colorWithRed:0.3f green:0.4f blue:0.6f alpha:0.5f];
     CGContextSetFillColorWithColor(currentContext, [stellBlueColor CGColor]);
  
-    UIBezierPath* path = [UIBezierPath bezierPath];
+    // release old one
+    if (self.curBezierPath != nil){
+        [self.curBezierPath release];
+    }
+    self.curBezierPath = [[UIBezierPath bezierPath] retain];
+
     CGPoint pervious;
     int pointCnt = [self.curPolygonPoints count];
     for (int i = 0; i <= pointCnt; i++){
         // it's a polygon. So must add bezier for the last point line to begin, or it will be straight line by system automatically
         CGPoint p = [[self.curPolygonPoints objectAtIndex:(i%pointCnt)] CGPointValue];
         if (i == 0){
-            [path moveToPoint:CGPointMake(p.x, p.y)];
+            [self.curBezierPath moveToPoint:CGPointMake(p.x, p.y)];
         }
         else{
             // add Curve
@@ -71,23 +87,19 @@ CGFloat BEZIER_FACTOR2 = 0.3f;
             // check the quadrant
             if (xOffset*yOffset < 0.0f){
                 xOffset *= BEZIER_FACTOR2;
-                [path addCurveToPoint:p controlPoint1:CGPointMake(pervious.x+xOffset, p.y)  controlPoint2:CGPointMake(p.x-xOffset, p.y)];
+                [self.curBezierPath addCurveToPoint:p controlPoint1:CGPointMake(pervious.x+xOffset, p.y)  controlPoint2:CGPointMake(p.x-xOffset, p.y)];
             }
             else{
                 xOffset *= BEZIER_FACTOR1;
-                [path addCurveToPoint:p controlPoint1:CGPointMake(pervious.x+xOffset, pervious.y)  controlPoint2:CGPointMake(p.x-xOffset,  pervious.y)];
+                [self.curBezierPath addCurveToPoint:p controlPoint1:CGPointMake(pervious.x+xOffset, pervious.y)  controlPoint2:CGPointMake(p.x-xOffset,  pervious.y)];
             }
-            
-            
 
         }
-        
         pervious = p;
     }   
     
-    [path fill];
+    [self.curBezierPath fill];
     
-
 }
 
 

@@ -11,6 +11,6 @@
 @interface PloygonUIView : UIView{
 }
 
-
 -(void)setPolygonPoints:(NSArray*)points;
+-(UIBezierPath*)getCurPath;
 @end
