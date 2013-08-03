@@ -12,6 +12,9 @@
 @property (nonatomic) NSArray* curPolygonPoints;
 @end
 
+CGFloat BEZIER_FACTOR1 = 0.25f;
+CGFloat BEZIER_FACTOR2 = 0.3f;
+
 @implementation PloygonUIView
 
 - (id)initWithFrame:(CGRect)frame
@@ -53,47 +56,38 @@
  
     UIBezierPath* path = [UIBezierPath bezierPath];
     CGPoint pervious;
-    for (int i = 0; i < [self.curPolygonPoints count]; i++){
-        CGPoint p = [[self.curPolygonPoints objectAtIndex:i] CGPointValue];
+    int pointCnt = [self.curPolygonPoints count];
+    for (int i = 0; i <= pointCnt; i++){
+        // it's a polygon. So must add bezier for the last point line to begin, or it will be straight line by system automatically
+        CGPoint p = [[self.curPolygonPoints objectAtIndex:(i%pointCnt)] CGPointValue];
         if (i == 0){
             [path moveToPoint:CGPointMake(p.x, p.y)];
         }
         else{
             // add Curve
-            [path addQuadCurveToPoint:CGPointMake(p.x, p.y) controlPoint:CGPointMake((pervious.x + p.x)/2.0f - 50, (pervious.y + p.y)/2.0f - 50)];
-            [path addLineToPoint:CGPointMake(p.x, p.y)];
+            CGFloat xOffset = (p.x - pervious.x);
+            CGFloat yOffset = (p.y - pervious.y);
+            
+            // check the quadrant
+            if (xOffset*yOffset < 0.0f){
+                xOffset *= BEZIER_FACTOR2;
+                [path addCurveToPoint:p controlPoint1:CGPointMake(pervious.x+xOffset, p.y)  controlPoint2:CGPointMake(p.x-xOffset, p.y)];
+            }
+            else{
+                xOffset *= BEZIER_FACTOR1;
+                [path addCurveToPoint:p controlPoint1:CGPointMake(pervious.x+xOffset, pervious.y)  controlPoint2:CGPointMake(p.x-xOffset,  pervious.y)];
+            }
+            
+            
+
         }
         
         pervious = p;
-    }
-    
-    
- //   [path addQuadCurveToPoint:CGPointMake(160.0, 140.0) controlPoint:CGPointMake(300.0, 90.0)];
- //   [path addLineToPoint:CGPointMake(160.0, 140.0)];
- //   [path addLineToPoint:CGPointMake(40.0, 140.0)];
- //   [path addLineToPoint:CGPointMake(0.0, 40.0)];
-    [path closePath];
-    
+    }   
     
     [path fill];
     
- /*
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGContextBeginPath(currentContext);
-    CGContextMoveToPoint(currentContext, 20, 20);
-    CGContextAddLineToPoint(currentContext, 30, 40);
-    CGContextAddLineToPoint(currentContext, 130, 140);
-     CGContextAddLineToPoint(currentContext, 130, 30);
-     CGContextAddLineToPoint(currentContext, 30, 30);
-    CGContextClosePath(currentContext);
-    
-    CGContextAddPath(currentContext, path);
- 
-    UIColor *stellBlueColor = [UIColor colorWithRed:0.3f green:0.4f blue:0.6f alpha:0.5f];
-    CGContextSetFillColorWithColor(currentContext, [stellBlueColor CGColor]);
-    CGContextFillPath(currentContext);
-    CGPathRelease(path);
-    */ 
+
 }
 
 
